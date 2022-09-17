@@ -9,19 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^1.35.6",
     "next": "12.3.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.11",
+    "autoprefixer": "10.4.11",
     "eslint": "8.23.1",
     "eslint-config-next": "12.3.0",
     "eslint-config-prettier": "8.5.0",
-    "postcss": "^8.4.16",
+    "postcss": "8.4.16",
     "prettier": "2.7.1",
     "prop-types": "15.8.1",
     "standard": "17.0.0",
-    "tailwindcss": "^3.1.8"
+    "tailwindcss": "3.1.8"
   }
 }
