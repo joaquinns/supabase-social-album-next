@@ -15,6 +15,9 @@
   },
   "devDependencies": {
     "eslint": "8.23.1",
-    "eslint-config-next": "12.3.0"
+    "eslint-config-next": "12.3.0",
+    "eslint-config-prettier": "8.5.0",
+    "prettier": "2.7.1",
+    "standard": "17.0.0"
   }
 }
