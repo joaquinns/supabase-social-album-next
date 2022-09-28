@@ -16,13 +16,53 @@ export const createAlbum = async ({ albumName, albumDescription, userId }) => {
 }
 
 export const getAlbums = async () => {
-  const { data: albums, error } = await supabase.from('albums').select(`*`)
-  return [albums, error]
+  const { data, error } = await supabase.from('albums').select(`*`)
+  return [data, error]
+}
+
+export const updateAlbum = async ({ albumId, photoCoverURL }) => {
+  const { data, error } = await supabase
+    .from('albums')
+    .update({ cover: photoCoverURL })
+    .match({ id: Number(albumId) })
+
+  return [data, error]
+}
+
+export const deletePhoto = async (photoId) => {
+  const { data: searchUrlData, error: searchUrlError } = await supabase
+    .from('photos')
+    .select('*')
+    .eq('id', photoId)
+
+  if (searchUrlError) {
+    console.log('search error :s')
+    return [null, searchUrlError]
+  }
+  const imgURL = searchUrlData[0].img_url
+  console.log(imgURL)
+
+  const { data: deleteData, error: deleteError } = await supabase
+    .from('photos')
+    .delete()
+    .match({ id: photoId })
+
+  const { data, error } = await supabase
+    .from('albums')
+    .update({ cover: null })
+    .match({ cover: imgURL })
+
+  if (error) {
+    return [error]
+  }
+  console.log(data)
+
+  return [deleteData, deleteError]
 }
 
 export const getPhotosAlbum = async (albumId) => {
   return await supabase
-    .from('photo_album')
+    .from('photos')
     .select(`*`)
     .eq('photo_album', `${Number(albumId)}`)
 }
@@ -59,7 +99,7 @@ export const uploadPhoto = async ({ imageFile }) => {
 }
 
 export const publishImage = async ({ photoURL, photoDescription, albumId }) => {
-  const { data, error } = await supabase.from('photo_album').insert([
+  const { data, error } = await supabase.from('photos').insert([
     {
       img_url: photoURL,
       photo_album: albumId,
