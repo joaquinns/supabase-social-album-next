@@ -1,13 +1,16 @@
+import { Grid } from 'components/Grid'
 import { Layout } from 'components/Layout'
 import { useAuth } from 'context/authContext'
 import Head from 'next/head'
 import Link from 'next/link'
+// import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { getAlbums } from 'services/albums'
 
 export default function Home() {
   const [albums, setAlbums] = useState([])
+  console.log('🚀 ~ file: index.js ~ line 13 ~ Home ~ albums', albums)
   const { user, isLoading } = useAuth()
   const router = useRouter()
   console.log('🚀 ~ file: index.js ~ line 8 ~ Home ~ user', user)
@@ -38,16 +41,19 @@ export default function Home() {
       </Head>
 
       <Layout>
-        <h1 className='text-2xl'>All the albums :D</h1>
+        <h1 className='text-2xl my-2'>All the albums :D</h1>
 
-        {albums.map((album) => (
-          <Link key={album.id} href={`/album/${album.id}`}>
-            <a>
-              <h2>{album.name}</h2>
-              <p>{album.description}</p>
-            </a>
-          </Link>
-        ))}
+        <Grid>
+          {albums.map((album) => (
+            <Link key={album.id} href={`/album/${album.id}`}>
+              <a className='py-2 px-4  bg-zinc-700 shadow-md shadow-zinc-700/50 rounded relative hover:bg-zinc-800 ease-in-out duration-150'>
+                {console.log(album, 'FROOOOOOM ALBUMS')}
+                <h2>{album.name}</h2>
+                <p>{album.description}</p>
+              </a>
+            </Link>
+          ))}
+        </Grid>
       </Layout>
     </div>
   )
