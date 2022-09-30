@@ -31,7 +31,7 @@ export const updateAlbum = async ({ albumId, photoCoverURL }) => {
 
 export const deletePhoto = async (photoId) => {
   const { data: searchUrlData, error: searchUrlError } = await supabase
-    .from('photos')
+    .from('photo_album')
     .select('*')
     .eq('id', photoId)
 
@@ -40,12 +40,19 @@ export const deletePhoto = async (photoId) => {
     return [null, searchUrlError]
   }
   const imgURL = searchUrlData[0].img_url
+  const img = imgURL.split('/')[9].split('?')[0]
   console.log(imgURL)
+  console.log('🚀 ~ file: index.js ~ line 45 ~ deletePhoto ~ imgURL', img)
 
   const { data: deleteData, error: deleteError } = await supabase
-    .from('photos')
+    .from('photo_album')
     .delete()
     .match({ id: photoId })
+
+  const { data: photoRemoved, error: photoRemovedError } =
+    await supabase.storage.from('album').remove([`photos/${img}`])
+
+  console.log(photoRemoved, photoRemovedError)
 
   const { data, error } = await supabase
     .from('albums')
@@ -62,7 +69,7 @@ export const deletePhoto = async (photoId) => {
 
 export const getPhotosAlbum = async (albumId) => {
   return await supabase
-    .from('photos')
+    .from('photo_album')
     .select(`*`)
     .eq('photo_album', `${Number(albumId)}`)
 }
@@ -99,7 +106,7 @@ export const uploadPhoto = async ({ imageFile }) => {
 }
 
 export const publishImage = async ({ photoURL, photoDescription, albumId }) => {
-  const { data, error } = await supabase.from('photos').insert([
+  const { data, error } = await supabase.from('photo_album').insert([
     {
       img_url: photoURL,
       photo_album: albumId,
