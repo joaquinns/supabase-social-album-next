@@ -11,6 +11,7 @@ export const usePhotos = ({ albumId }) => {
       getPhotosAlbum(albumId).then((photos) => {
         if (photos.error) {
           console.log(photos.error)
+          setIsLoading(false)
         }
         setPhotos(photos.data)
         setIsLoading(false)
@@ -23,6 +24,7 @@ export const usePhotos = ({ albumId }) => {
   return {
     photos,
     setPhotos,
+    setIsLoading,
     isLoading
   }
 }
