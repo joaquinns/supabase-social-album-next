@@ -4,7 +4,7 @@ import { IoIosClose } from 'react-icons/io'
 export const Modal = ({ children, isOpen, closeModal }) => {
   const classNames = `
   ${isOpen ? 'flex flex-col' : 'hidden'}
-  bg-[#00000070] justify-center items-center
+  bg-[#00000090] justify-center items-center
   fixed top-0 left-0 h-screen w-full z-40
   `
   const handleModalClick = (e) => e.stopPropagation()
