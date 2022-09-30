@@ -3,7 +3,7 @@ import { Layout } from 'components/Layout'
 import { useAuth } from 'context/authContext'
 import Head from 'next/head'
 import Link from 'next/link'
-// import Image from 'next/image'
+import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { getAlbums } from 'services/albums'
@@ -46,10 +46,20 @@ export default function Home() {
         <Grid>
           {albums.map((album) => (
             <Link key={album.id} href={`/album/${album.id}`}>
-              <a className='py-2 px-4  bg-zinc-700 shadow-md shadow-zinc-700/50 rounded relative hover:bg-zinc-800 ease-in-out duration-150'>
+              <a className='py-2 px-4  bg-zinc-700 shadow-md shadow-zinc-700/50 rounded relative hover:bg-zinc-800 hover:shadow-zinc-700/90 hover:shadow-xl ease-in-out duration-150 min-h-[150px] w-full z-50'>
+                {album.cover && (
+                  <Image
+                    src={album.cover}
+                    layout='fill'
+                    alt='image'
+                    className='relative rounded'
+                  />
+                )}
+                <div className='bg-[#00000070] absolute top-0 bottom-0 left-0 right-0 z-20 rounded'></div>
                 {console.log(album, 'FROOOOOOM ALBUMS')}
-                <h2>{album.name}</h2>
-                <p>{album.description}</p>
+                <h2 className='text-center z-40 font-bold absolute bottom-2'>
+                  {album.name}
+                </h2>
               </a>
             </Link>
           ))}
