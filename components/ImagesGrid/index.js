@@ -1,9 +1,12 @@
 import { Grid } from 'components/Grid'
 import { PhotoModal } from 'components/PhotoModal'
+import { usePhotosAlbum } from 'context/photosContext'
 import PropTypes from 'prop-types'
 
-export const ImageGrid = ({ photos, isloading }) => {
-  if (isloading) {
+export const ImageGrid = ({ albumId }) => {
+  const { photos, isLoading } = usePhotosAlbum()
+
+  if (isLoading) {
     return (
       <Grid>
         {Array(12)
@@ -11,7 +14,7 @@ export const ImageGrid = ({ photos, isloading }) => {
           .map((_e, i) => (
             <div
               key={i}
-              className='bg-zinc-700 w-[250px]  lg:w-[200px] h-[200px] animate-pulse rounded'
+              className='bg-zinc-700 w-full h-[150px] animate-pulse rounded'
             ></div>
           ))}
       </Grid>
@@ -21,7 +24,9 @@ export const ImageGrid = ({ photos, isloading }) => {
   return (
     <Grid>
       {photos && photos.length > 0 ? (
-        photos.map((photo) => <PhotoModal photo={photo} key={photo.id} />)
+        photos.map((photo) => (
+          <PhotoModal photo={photo} key={photo.id} albumId={albumId} />
+        ))
       ) : (
         <h1>Theres not images yet</h1>
       )}
@@ -30,6 +35,5 @@ export const ImageGrid = ({ photos, isloading }) => {
 }
 
 ImageGrid.propTypes = {
-  photos: PropTypes.array,
-  loading: PropTypes.bool
+  albumId: PropTypes.number
 }
