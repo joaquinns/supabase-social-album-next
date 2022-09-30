@@ -1,7 +1,11 @@
 import PropTypes from 'prop-types'
 
 export const Grid = ({ children }) => {
-  return <div className='grid grid-cols-auto-grid gap-4'>{children}</div>
+  return (
+    <div className='grid grid-cols-auto-grid gap-3 lg:gap-2 justify-center items-center'>
+      {children}
+    </div>
+  )
 }
 
 Grid.propTypes = {
