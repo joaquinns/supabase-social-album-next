@@ -13,7 +13,7 @@ export const Modal = ({ children, isOpen, closeModal }) => {
     <div onClick={closeModal} className={classNames}>
       <div
         onClick={handleModalClick}
-        className='bg-zinc-800 container mx-auto p-4 rounded h-[90%] overflow-auto relative'
+        className='bg-zinc-800 container mx-auto rounded h-[90%] overflow-auto relative'
       >
         <button
           onClick={closeModal}
