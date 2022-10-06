@@ -3,7 +3,7 @@ import { PhotoModal } from 'components/PhotoModal'
 import { usePhotosAlbum } from 'context/photosContext'
 import PropTypes from 'prop-types'
 
-export const ImageGrid = ({ albumId }) => {
+export const ImageGrid = ({ albumId, userAlbum }) => {
   const { photos, isLoading } = usePhotosAlbum()
 
   if (isLoading) {
@@ -25,7 +25,12 @@ export const ImageGrid = ({ albumId }) => {
     <Grid>
       {photos && photos.length > 0 ? (
         photos.map((photo) => (
-          <PhotoModal photo={photo} key={photo.id} albumId={albumId} />
+          <PhotoModal
+            photo={photo}
+            key={photo.id}
+            albumId={albumId}
+            userAlbum={userAlbum}
+          />
         ))
       ) : (
         <h1>Theres not images yet</h1>
