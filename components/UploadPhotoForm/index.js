@@ -2,29 +2,41 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { uploadPhoto, publishImage } from 'services/albums'
 import { usePhotosAlbum } from 'context/photosContext'
+import { Spinner } from 'components/Spinner'
 
-export const UploadPhotoForm = ({ albumId }) => {
+export const UploadPhotoForm = ({ albumId, closeForm }) => {
   const { setPhotos, setIsLoading: setIsLoadingPhotos } = usePhotosAlbum()
   const [imageURL, setImageURL] = useState(null)
+  const [file, setFile] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const [uploadLoading, setUploadLoading] = useState(false)
   const [description, setDescription] = useState('')
 
   const handleChangePhoto = async (e) => {
     e.preventDefault()
+    setIsLoading(true)
+    const reader = new FileReader()
     // the code below is only with drag events...
     // const file = e.dataTransfer.files[0]
-    console.log(e.target.files[0])
     const imageFile = e.target.files[0]
-    setUploadLoading(true)
-    const [url, error] = await uploadPhoto({ imageFile })
-    console.log(url, '-----  URL')
-    console.log(
-      '🚀 ~ file: index.js ~ line 33 ~ handleChangePhoto ~ error',
-      error
+    setFile(imageFile)
+    reader.addEventListener(
+      'load',
+      (e) => {
+        // convert image file to base64 string
+        setImageURL(e.target.result)
+      },
+      false
     )
-    setImageURL(url)
-    setUploadLoading(false)
+
+    if (imageFile) {
+      reader.readAsDataURL(imageFile)
+      setIsLoading(false)
+    }
+    console.log(imageURL)
+    if (!imageFile) {
+      setIsLoading(false)
+    }
   }
 
   const handleChangeDescription = (e) => {
@@ -35,6 +47,14 @@ export const UploadPhotoForm = ({ albumId }) => {
   const handleUploadPhoto = async (e) => {
     e.preventDefault()
     setIsLoading(true)
+    setUploadLoading(true)
+    const [url, uploadPhotoError] = await uploadPhoto({ imageFile: file })
+    setImageURL(url)
+    if (uploadPhotoError) {
+      setIsLoading(false)
+      setUploadLoading(false)
+      return console.log(uploadPhotoError)
+    }
     const [data, error] = await publishImage({
       photoURL: imageURL,
       photoDescription: e.target.description.value,
@@ -43,14 +63,18 @@ export const UploadPhotoForm = ({ albumId }) => {
     console.log(data, 'NEW PHOTOOO CREATED')
     if (error) {
       setIsLoading(false)
-      console.error(error)
+      setUploadLoading(false)
+      return console.error(error)
     }
-    console.log(data[0], 'ANTES DE GUARDAR')
     setIsLoadingPhotos(true)
     setPhotos((prevPhotos) => prevPhotos.concat(data[0]))
+    e.target.description.value = ''
+    e.target.file = null
+    setImageURL(null)
     setIsLoading(false)
+    setUploadLoading(false)
     setIsLoadingPhotos(false)
-    /*     console.log(photos, 'DESPUES DE CREADO') */
+    closeForm(false)
     console.log(
       '🚀 ~ file: index.js ~ line 53 ~ handleUploadPhoto ~ data',
       data
@@ -58,18 +82,22 @@ export const UploadPhotoForm = ({ albumId }) => {
   }
 
   return (
-    <form className='flex flex-col gap-4' onSubmit={handleUploadPhoto}>
+    <form className='flex flex-col gap-4 w-full' onSubmit={handleUploadPhoto}>
       {imageURL && (
-        <Image
-          src={imageURL}
-          alt='image of the album :D'
-          className='rounded'
-          width={400}
-          height={300}
-        />
-      )}
-      {uploadLoading && (
-        <div className='w-[400px] h-[300px] bg-zinc-700 animate-pulse rounded'></div>
+        <div className='relative'>
+          <Image
+            src={imageURL}
+            alt='image of the album :D'
+            className='relative rounded'
+            width={400}
+            height={300}
+          />
+          {uploadLoading && (
+            <div className='absolute bg-[#00000090] top-0 right-0 bottom-0 left-0 flex justify-center items-center rounded'>
+              <Spinner size={2} />
+            </div>
+          )}
+        </div>
       )}
       {imageURL && (
         <textarea
@@ -94,22 +122,26 @@ export const UploadPhotoForm = ({ albumId }) => {
         onChange={handleChangePhoto}
       />
 
-      {imageURL && description?.length > 10 ? (
-        <button className='px-4 py-2 bg-zinc-700 rounded font-bold'>
-          {isLoading ? (
-            <div className='border-2 border-gray-500 border-t-teal-500 border-t-4 animate-spin rounded-full h-6 w-6 flex mx-auto justify-center'></div>
-          ) : (
-            'upload!'
-          )}
-        </button>
-      ) : (
-        <button
-          disabled
-          className='px-4 py-2 bg-zinc-700 rounded-full font-bold disabled:opacity-30'
+      <div className='flex items-center justify-center gap-2 w-full'>
+        <span
+          onClick={() => closeForm(false)}
+          className='px-4 py-2 cursor-pointer bg-red-600 rounded-full font-semibold hover:bg-red-800 ease duration-75'
         >
-          Upload
-        </button>
-      )}
+          Cancel
+        </span>
+        {!isLoading && imageURL && description?.length > 10 ? (
+          <button className='px-4 py-2 bg-zinc-700 rounded-full font-bold'>
+            upload!
+          </button>
+        ) : (
+          <button
+            disabled
+            className='px-4 py-2 bg-zinc-700 rounded-full font-bold disabled:opacity-30'
+          >
+            Upload
+          </button>
+        )}
+      </div>
     </form>
   )
 }
