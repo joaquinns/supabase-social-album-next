@@ -2,14 +2,14 @@ import { Grid } from 'components/Grid'
 import { Layout } from 'components/Layout'
 import { useAuth } from 'context/authContext'
 import Head from 'next/head'
-import Link from 'next/link'
-import Image from 'next/image'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { getAlbums } from 'services/albums'
+import { getAllUserAlbums } from 'services/albums'
+import { Album } from 'components/Album'
 
 export default function Home() {
   const [albums, setAlbums] = useState([])
+  const [loadingAlbums, setLoadingAlbums] = useState(true)
   console.log('🚀 ~ file: index.js ~ line 13 ~ Home ~ albums', albums)
   const { user, isLoading } = useAuth()
   const router = useRouter()
@@ -18,18 +18,19 @@ export default function Home() {
   useEffect(() => {
     if (!isLoading && !user) {
       console.log('Theres no user :D')
-      router.push('/login')
+      router.push('/explore')
     }
 
     const fetchAlbums = async () => {
-      const [data, error] = await getAlbums()
-      setAlbums(data)
+      const { data, error } = await getAllUserAlbums(user.id)
       if (error) {
         console.log(error)
       }
+      setAlbums(data)
+      setLoadingAlbums(false)
     }
 
-    fetchAlbums()
+    user && fetchAlbums()
   }, [isLoading, router, user])
 
   return (
@@ -41,28 +42,21 @@ export default function Home() {
       </Head>
 
       <Layout>
-        <h1 className='text-2xl my-2'>All the albums :D</h1>
+        <h1 className='text-2xl lg:text-3xl my-2 py-6 font-bold'>
+          Your Albums
+        </h1>
 
         <Grid>
-          {albums.map((album) => (
-            <Link key={album.id} href={`/album/${album.id}`}>
-              <a className='py-2 px-4  bg-zinc-700 shadow-md shadow-zinc-700/50 rounded relative hover:bg-zinc-800 hover:shadow-zinc-700/90 hover:shadow-xl ease-in-out duration-150 min-h-[150px] w-full z-50'>
-                {album.cover && (
-                  <Image
-                    src={album.cover}
-                    layout='fill'
-                    alt='image'
-                    className='relative rounded'
-                  />
-                )}
-                <div className='bg-[#00000070] absolute top-0 bottom-0 left-0 right-0 z-20 rounded'></div>
-                {console.log(album, 'FROOOOOOM ALBUMS')}
-                <h2 className='text-center z-40 font-bold absolute bottom-2'>
-                  {album.name}
-                </h2>
-              </a>
-            </Link>
-          ))}
+          {user && loadingAlbums
+            ? Array(12)
+                .fill('filled')
+                .map((_e, i) => (
+                  <div
+                    key={i}
+                    className='bg-zinc-700 w-full h-[150px] animate-pulse rounded'
+                  ></div>
+                ))
+            : albums?.map((album) => <Album album={album} key={album.id} />)}
         </Grid>
       </Layout>
     </div>
