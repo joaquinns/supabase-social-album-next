@@ -4,7 +4,8 @@ import { supabase } from 'supabase'
 export const AuthContext = createContext({
   user: null,
   isLoading: true,
-  handleGoogleLogin: () => {}
+  handleGoogleLogin: () => {},
+  handleLogout: () => {}
 })
 
 export function AuthContextProvider({ children }) {
@@ -32,6 +33,11 @@ export function AuthContextProvider({ children }) {
       await supabase.auth.signIn({
         provider: 'google'
       })
+      setIsLoading(false)
+    },
+    handleLogout: async () => {
+      setIsLoading(true)
+      await supabase.auth.signOut()
       setIsLoading(false)
     },
     user,
