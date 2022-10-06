@@ -17,7 +17,8 @@ export const createAlbum = async ({ albumName, albumDescription, userId }) => {
 
 export const getAlbums = async () => {
   const { data, error } = await supabase.from('albums').select(`*`)
-  return [data, error]
+  const dataRandomSorted = data.sort(() => Math.random() - 0.5)
+  return [dataRandomSorted, error]
 }
 
 export const updateAlbum = async ({ albumId, photoCoverURL }) => {
@@ -74,11 +75,67 @@ export const getPhotosAlbum = async (albumId) => {
     .eq('photo_album', `${Number(albumId)}`)
 }
 
+export const getAllUserAlbums = async (userId) => {
+  return await supabase.from('albums').select(`*`).eq('user_album', `${userId}`)
+}
+
 export const getUserAlbum = async (albumId) => {
   return await supabase
     .from('albums')
     .select(`*`)
     .eq('id', `${Number(albumId)}`)
+}
+
+export const getLike = async ({ userId, albumId }) => {
+  const {
+    data: allLikesDAta,
+    error: allDataError,
+    count
+  } = await supabase
+    .from('album_likes')
+    .select('*', { count: 'exact' })
+    .eq('album_id', albumId)
+
+  if (!userId) {
+    return [allLikesDAta, allDataError, count]
+  }
+
+  const { data, error } = await supabase
+    .from('album_likes')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('album_id', albumId)
+
+  return [data, error, count]
+}
+
+export const likeAlbum = async ({ userId, albumId }) => {
+  const { data, error } = await supabase.from('album_likes').insert({
+    user_id: userId,
+    album_id: albumId
+  })
+
+  const { count } = await supabase
+    .from('album_likes')
+    .select('*', { count: 'exact' })
+    .eq('album_id', albumId)
+
+  return [data, error, count]
+}
+
+export const dislikeAlbum = async ({ userId, albumId }) => {
+  const { data, error } = await supabase
+    .from('album_likes')
+    .delete()
+    .eq('user_id', userId)
+    .eq('album_id', albumId)
+
+  const { count } = await supabase
+    .from('album_likes')
+    .select('*', { count: 'exact' })
+    .eq('album_id', albumId)
+
+  return [data, error, count]
 }
 
 export const uploadPhoto = async ({ imageFile }) => {
@@ -88,6 +145,11 @@ export const uploadPhoto = async ({ imageFile }) => {
   )
   const filetype = imageFile?.type
   const filename = nanoid()
+
+  if (!filetype) {
+    return [null, { error: 'not files loaded' }]
+  }
+
   if (!filetype.startsWith('image')) {
     return [null, { error: 'This not an image file' }]
   }
