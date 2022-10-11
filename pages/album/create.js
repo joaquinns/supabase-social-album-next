@@ -21,7 +21,7 @@ export default function Create() {
                 </a>
               </Link>
             </div>
-            <h1 className='text-xl md:text-3xl text-center font-bold my-2 w-full'>
+            <h1 className='text-xl md:text-3xl py-6 font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-blue-800 to-purple-900'>
               Create an album
             </h1>
           </div>
