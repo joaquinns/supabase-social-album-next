@@ -18,11 +18,11 @@ export default function AlbumID({ album, albumId }) {
             <div className='flex flex-col md:flex-row justify-center items-center gap-3 mt-4'>
               <UploadButton albumId={album.id} />
             </div>
-            <div className='w-full h-full'>
-              <h1 className='text-2xl lg:text-3xl font-bold my-4'>
+            <div className='w-full min-h-screen'>
+              <h1 className='text-2xl lg:text-3xl font-bold my-4 text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-blue-800 to-purple-900 break-words'>
                 {album.name}
               </h1>
-              <p className='text-lg mb-4 py-3 font-semibold'>
+              <p className='text-lg mb-4 py-3 font-semibold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-300 break-words'>
                 {album.description}
               </p>
               <ImageGrid albumId={albumId} userAlbum={album.user_album} />
