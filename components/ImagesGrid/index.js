@@ -22,23 +22,30 @@ export const ImageGrid = ({ albumId, userAlbum }) => {
   }
 
   return (
-    <Grid>
-      {photos && photos.length > 0 ? (
-        photos.map((photo) => (
-          <PhotoModal
-            photo={photo}
-            key={photo.id}
-            albumId={albumId}
-            userAlbum={userAlbum}
-          />
-        ))
-      ) : (
-        <h1>Theres not images yet</h1>
-      )}
-    </Grid>
+    <>
+      <Grid>
+        {photos &&
+          photos.length > 0 &&
+          photos.map((photo) => (
+            <PhotoModal
+              photo={photo}
+              key={photo.id}
+              albumId={albumId}
+              userAlbum={userAlbum}
+            />
+          ))}
+      </Grid>
+      {!photos ||
+        (photos.length < 1 && (
+          <h1 className='text-gray-300 font-bold text-center text-2xl'>
+            {"There's not images yet.. :("}
+          </h1>
+        ))}
+    </>
   )
 }
 
 ImageGrid.propTypes = {
-  albumId: PropTypes.number
+  albumId: PropTypes.number,
+  userAlbum: PropTypes.object
 }
