@@ -1,9 +1,31 @@
 import { supabase } from 'supabase'
-import { nanoid } from 'nanoid'
+import { v4 as uuidv4 } from 'uuid'
 
 const storagePrefix = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_URL
 
 export const createAlbum = async ({ albumName, albumDescription, userId }) => {
+  const validations = {
+    albumName: null,
+    albumDescription: null
+  }
+
+  if (albumName.length < 9) {
+    validations.albumName = 'The name must be at least 9 characters'
+  }
+
+  if (albumDescription.length < 9) {
+    validations.albumDescription =
+      'The description must be at least 15 characters'
+  }
+
+  if (
+    (albumName.length < 9 && albumDescription.length < 9) ||
+    albumName.length < 9 ||
+    albumDescription.length < 9
+  ) {
+    return [null, validations]
+  }
+
   const { data, error } = await supabase.from('albums').insert([
     {
       name: albumName,
@@ -13,12 +35,6 @@ export const createAlbum = async ({ albumName, albumDescription, userId }) => {
   ])
 
   return [data, error]
-}
-
-export const getAlbums = async () => {
-  const { data, error } = await supabase.from('albums').select(`*`)
-  const dataRandomSorted = data.sort(() => Math.random() - 0.5)
-  return [dataRandomSorted, error]
 }
 
 export const updateAlbum = async ({ albumId, photoCoverURL }) => {
@@ -73,6 +89,12 @@ export const getPhotosAlbum = async (albumId) => {
     .from('photo_album')
     .select(`*`)
     .eq('photo_album', `${Number(albumId)}`)
+}
+
+export const getAlbums = async () => {
+  const { data, error } = await supabase.from('albums').select(`*`)
+  const dataRandomSorted = data.sort(() => Math.random() - 0.5)
+  return [dataRandomSorted, error]
 }
 
 export const getAllUserAlbums = async (userId) => {
@@ -143,19 +165,32 @@ export const uploadPhoto = async ({ imageFile }) => {
     '🚀 ~ file: index.js ~ line 24 ~ uploadPhoto ~ imageFile',
     imageFile
   )
+  const file = imageFile
   const filetype = imageFile?.type
-  const filename = nanoid()
+  const filename = uuidv4()
 
-  if (!filetype) {
-    return [null, { error: 'not files loaded' }]
+  const validations = {
+    file: null,
+    filetype: null,
+    fileSize: null
   }
 
-  if (!filetype.startsWith('image')) {
-    return [null, { error: 'This not an image file' }]
+  if (!file) {
+    validations.file = 'Not files loaded'
   }
-  if (imageFile.syze > 3000000) {
-    return [null, { error: 'The file is too big' }]
+
+  if (file && !filetype.startsWith('image')) {
+    validations.filetype = 'The file is not an image'
   }
+  if (file && imageFile.size > 3000000) {
+    validations.fileSize = 'Max file image is 3mb'
+  }
+
+  if (!file || !filetype.startsWith('image') || imageFile.size > 3000000) {
+    console.log(validations)
+    return [null, validations]
+  }
+
   const { data, error } = await supabase.storage
     .from('album')
     .upload(`photos/${filename}.jpg`, imageFile)
