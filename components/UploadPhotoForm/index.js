@@ -9,16 +9,30 @@ export const UploadPhotoForm = ({ albumId, closeForm }) => {
   const [imageURL, setImageURL] = useState(null)
   const [file, setFile] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const initialValidations = {
+    file: null,
+    filetype: null,
+    fileSize: null
+  }
+  const [validationsErrors, setValidationsErrors] = useState(initialValidations)
   const [uploadLoading, setUploadLoading] = useState(false)
   const [description, setDescription] = useState('')
 
   const handleChangePhoto = async (e) => {
     e.preventDefault()
+    setValidationsErrors(initialValidations)
     setIsLoading(true)
     const reader = new FileReader()
     // the code below is only with drag events...
     // const file = e.dataTransfer.files[0]
     const imageFile = e.target.files[0]
+    if (!imageFile?.type?.startsWith('image')) {
+      console.error('no es una inageb')
+      return setValidationsErrors({
+        ...validationsErrors,
+        filetype: 'The file is not an image'
+      })
+    }
     setFile(imageFile)
     reader.addEventListener(
       'load',
@@ -53,7 +67,8 @@ export const UploadPhotoForm = ({ albumId, closeForm }) => {
     if (uploadPhotoError) {
       setIsLoading(false)
       setUploadLoading(false)
-      return console.log(uploadPhotoError)
+      setImageURL(null)
+      return setValidationsErrors({ ...validationsErrors, uploadPhotoError })
     }
     const [data, error] = await publishImage({
       photoURL: imageURL,
@@ -64,6 +79,7 @@ export const UploadPhotoForm = ({ albumId, closeForm }) => {
     if (error) {
       setIsLoading(false)
       setUploadLoading(false)
+      setValidationsErrors({ ...validationsErrors, file: 'not file' })
       return console.error(error)
     }
     setIsLoadingPhotos(true)
@@ -82,9 +98,13 @@ export const UploadPhotoForm = ({ albumId, closeForm }) => {
   }
 
   return (
-    <form className='flex flex-col gap-4 w-full' onSubmit={handleUploadPhoto}>
+    <form
+      aria-label='uploadForm'
+      className='flex flex-col justify-center gap-4 '
+      onSubmit={handleUploadPhoto}
+    >
       {imageURL && (
-        <div className='relative'>
+        <div className='relative flex justify-center'>
           <Image
             src={imageURL}
             alt='image of the album :D'
@@ -111,6 +131,7 @@ export const UploadPhotoForm = ({ albumId, closeForm }) => {
       <input
         type='file'
         className='
+          w-full
           p-2 rounded bg-none
           file:mr-5 file:py-2 file:px-6
           file:rounded-full file:border-0
@@ -122,25 +143,32 @@ export const UploadPhotoForm = ({ albumId, closeForm }) => {
         onChange={handleChangePhoto}
       />
 
-      <div className='flex items-center justify-center gap-2 w-full'>
-        <span
-          onClick={() => closeForm(false)}
-          className='px-4 py-2 cursor-pointer bg-red-600 rounded-full font-semibold hover:bg-red-800 ease duration-75'
-        >
-          Cancel
-        </span>
-        {!isLoading && imageURL && description?.length > 10 ? (
-          <button className='px-4 py-2 bg-zinc-700 rounded-full font-bold'>
-            upload!
-          </button>
-        ) : (
-          <button
-            disabled
-            className='px-4 py-2 bg-zinc-700 rounded-full font-bold disabled:opacity-30'
+      <div className='flex flex-col items-center justify-center gap-2 w-full'>
+        <ul className='text-red-600 text-center font-bold w-full rounded-full p-2 flex flex-col justify-center gap-1'>
+          {validationsErrors.file && <li>{validationsErrors.file}</li>}
+          {validationsErrors.fileSize && <li>{validationsErrors.fileSize}</li>}
+          {validationsErrors.filetype && <li>{validationsErrors.filetype}</li>}
+        </ul>
+        <div className='flex gap-2'>
+          <span
+            onClick={() => closeForm(false)}
+            className='px-4 py-2 cursor-pointer bg-red-600 rounded-full font-semibold hover:bg-red-800 ease duration-75'
           >
-            Upload
-          </button>
-        )}
+            Cancel
+          </span>
+          {!isLoading && imageURL && description?.length > 10 ? (
+            <button className='px-4 py-2 bg-zinc-700 rounded-full font-bold'>
+              upload!
+            </button>
+          ) : (
+            <button
+              disabled
+              className='px-4 py-2 bg-zinc-700 rounded-full font-bold disabled:opacity-30'
+            >
+              Upload
+            </button>
+          )}
+        </div>
       </div>
     </form>
   )
