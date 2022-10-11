@@ -54,7 +54,7 @@ export const PhotoModal = ({ photo, userAlbum }) => {
             />
           </div>
           <div className='w-full lg:w-1/3 h-1/3 lg:h-full flex flex-col justify-center lg:justify-start gap-2 p-2'>
-            <p className='h-full p-1 rounded font-semibold overflow-y-auto'>
+            <p className='h-full p-1 rounded font-bold overflow-y-auto text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-300 break-words'>
               {photo.description}
             </p>
 
