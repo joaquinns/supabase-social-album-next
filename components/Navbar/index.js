@@ -21,6 +21,7 @@ export const Navbar = () => {
           </a>
         </Link>
         <button
+          aria-label='showButton'
           onClick={() => setShow(!show)}
           className='flex items-center p-2 text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600'
         >
@@ -33,6 +34,7 @@ export const Navbar = () => {
           </svg>
         </button>
         <div
+          data-testid='show'
           className={`${
             show
               ? 'absolute top-16 left-0 right-0 z-50 md:flex md:relative md:top-0'
