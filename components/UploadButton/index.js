@@ -13,6 +13,7 @@ export const UploadButton = ({ albumId }) => {
       )}
       {!showForm && (
         <button
+          aria-label='showForm'
           className='bg-blue-600 p-3 font-bold text-xl rounded-full hover:bg-blue-800 ease duration-200'
           onClick={() => setShowForm(!showForm)}
         >
