@@ -40,7 +40,6 @@ export const Album = ({ album }) => {
       })
       error && console.log(error)
       user && (data.length > 0 ? setLiked(true) : setLiked(false))
-      console.log(count, 'count')
       count && setLikesCount(count)
       setIsloading(false)
     }
