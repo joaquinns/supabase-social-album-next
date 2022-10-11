@@ -42,7 +42,7 @@ export default function Home() {
       </Head>
 
       <Layout>
-        <h1 className='text-2xl lg:text-3xl my-2 py-6 font-bold'>
+        <h1 className='text-2xl lg:text-3xl my-2 py-6 font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 via-blue-800 to-purple-900'>
           Your Albums
         </h1>
 
