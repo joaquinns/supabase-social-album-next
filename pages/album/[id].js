@@ -35,7 +35,7 @@ export default function AlbumID({ album, albumId }) {
 }
 
 export const getServerSideProps = async (ctx) => {
-  const albumId = await Number(ctx.query.id)
+  const albumId = Number(await ctx.query.id)
   const response = await getUserAlbum(albumId)
   const album = response.data[0]
 

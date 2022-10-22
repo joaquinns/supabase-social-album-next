@@ -46,6 +46,19 @@ export const updateAlbum = async ({ albumId, photoCoverURL }) => {
   return [data, error]
 }
 
+export const deleteAlbum = async (albumId) => {
+  const { data, error } = await supabase
+    .from('albums')
+    .select('*')
+    .eq('id', albumId)
+
+  if (error) {
+    return [null, error]
+  }
+
+  return [data, error]
+}
+
 export const deletePhoto = async (photoId) => {
   const { data: searchUrlData, error: searchUrlError } = await supabase
     .from('photo_album')
