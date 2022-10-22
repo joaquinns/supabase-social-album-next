@@ -9,10 +9,8 @@ import { Album } from 'components/Album'
 
 export default function Expore() {
   const [albums, setAlbums] = useState([])
-  console.log('🚀 ~ file: index.js ~ line 13 ~ Home ~ albums', albums)
   const { user } = useAuth()
   const router = useRouter()
-  console.log('🚀 ~ file: index.js ~ line 8 ~ Home ~ user', user)
 
   useEffect(() => {
     const fetchAlbums = async () => {

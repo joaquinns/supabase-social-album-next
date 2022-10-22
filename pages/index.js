@@ -10,14 +10,11 @@ import { Album } from 'components/Album'
 export default function Home() {
   const [albums, setAlbums] = useState([])
   const [loadingAlbums, setLoadingAlbums] = useState(true)
-  console.log('🚀 ~ file: index.js ~ line 13 ~ Home ~ albums', albums)
   const { user, isLoading } = useAuth()
   const router = useRouter()
-  console.log('🚀 ~ file: index.js ~ line 8 ~ Home ~ user', user)
 
   useEffect(() => {
     if (!isLoading && !user) {
-      console.log('Theres no user :D')
       router.push('/explore')
     }
 

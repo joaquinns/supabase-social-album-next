@@ -27,7 +27,6 @@ export const PhotoModal = ({ photo, userAlbum }) => {
   }
 
   const handleDeletePhoto = async (photoId, albumId) => {
-    console.log(photoId, 'este es el que quieres borrar')
     const [data, error] = await deletePhoto(photoId)
     if (error) {
       return console.log({ error })
@@ -35,10 +34,9 @@ export const PhotoModal = ({ photo, userAlbum }) => {
     setPhotos((prevPhotos) =>
       prevPhotos.filter((photo) => photo.id !== photoId)
     )
-
+    console.log(data)
     await updateAlbum({ albumId, photoCoverURL: null })
-    handleCloseModal()
-    return console.log('BORRADO!', data)
+    return handleCloseModal()
   }
   return (
     <div className='relative h-[150px] w-full'>

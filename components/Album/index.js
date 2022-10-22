@@ -14,7 +14,6 @@ export const Album = ({ album }) => {
 
   const handleLike = async (userId, albumId, evt) => {
     evt.preventDefault()
-    console.log(evt)
     const [data, error, count] = await likeAlbum({ userId, albumId })
     setLiked(true)
     setLikesCount(count)
@@ -24,7 +23,6 @@ export const Album = ({ album }) => {
 
   const handleDisLike = async (userId, albumId, evt) => {
     evt.preventDefault()
-    console.log(evt)
     const [data, error, count] = await dislikeAlbum({ userId, albumId })
     setLiked(false)
     setLikesCount(count)

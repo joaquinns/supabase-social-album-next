@@ -66,13 +66,10 @@ export const deletePhoto = async (photoId) => {
     .eq('id', photoId)
 
   if (searchUrlError) {
-    console.log('search error :s')
     return [null, searchUrlError]
   }
   const imgURL = searchUrlData[0].img_url
   const img = imgURL.split('/')[9].split('?')[0]
-  console.log(imgURL)
-  console.log('🚀 ~ file: index.js ~ line 45 ~ deletePhoto ~ imgURL', img)
 
   const { data: deleteData, error: deleteError } = await supabase
     .from('photo_album')
@@ -174,10 +171,6 @@ export const dislikeAlbum = async ({ userId, albumId }) => {
 }
 
 export const uploadPhoto = async ({ imageFile }) => {
-  console.log(
-    '🚀 ~ file: index.js ~ line 24 ~ uploadPhoto ~ imageFile',
-    imageFile
-  )
   const file = imageFile
   const filetype = imageFile?.type
   const filename = uuidv4()
@@ -200,15 +193,12 @@ export const uploadPhoto = async ({ imageFile }) => {
   }
 
   if (!file || !filetype.startsWith('image') || imageFile.size > 3000000) {
-    console.log(validations)
     return [null, validations]
   }
 
   const { data, error } = await supabase.storage
     .from('album')
     .upload(`photos/${filename}.jpg`, imageFile)
-
-  console.log(data, 'DAAAAAAAATA OF THE FUNC')
 
   const imageURL = data?.Key ? `${storagePrefix}${data.Key}` : ''
 
