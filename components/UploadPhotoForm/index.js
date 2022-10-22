@@ -27,7 +27,6 @@ export const UploadPhotoForm = ({ albumId, closeForm }) => {
     // const file = e.dataTransfer.files[0]
     const imageFile = e.target.files[0]
     if (!imageFile?.type?.startsWith('image')) {
-      console.error('no es una inageb')
       return setValidationsErrors({
         ...validationsErrors,
         filetype: 'The file is not an image'
@@ -55,7 +54,6 @@ export const UploadPhotoForm = ({ albumId, closeForm }) => {
 
   const handleChangeDescription = (e) => {
     setDescription(e.target.value)
-    console.log(description)
   }
 
   const handleUploadPhoto = async (e) => {
@@ -75,7 +73,6 @@ export const UploadPhotoForm = ({ albumId, closeForm }) => {
       photoDescription: e.target.description.value,
       albumId
     })
-    console.log(data, 'NEW PHOTOOO CREATED')
     if (error) {
       setIsLoading(false)
       setUploadLoading(false)
@@ -91,10 +88,6 @@ export const UploadPhotoForm = ({ albumId, closeForm }) => {
     setUploadLoading(false)
     setIsLoadingPhotos(false)
     closeForm(false)
-    console.log(
-      '🚀 ~ file: index.js ~ line 53 ~ handleUploadPhoto ~ data',
-      data
-    )
   }
 
   return (

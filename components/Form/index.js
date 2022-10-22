@@ -29,7 +29,7 @@ export const Form = () => {
     })
     setIsLoading(false)
     if (error) return setValidationErrors({ ...validationErrors, error })
-    console.log('creado perro!', albumCreated)
+    console.log(albumCreated)
     !error && router.push('/')
   }
 
