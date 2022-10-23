@@ -107,7 +107,7 @@ export const UploadPhotoForm = ({ albumId, closeForm }) => {
           />
           {uploadLoading && (
             <div className='absolute bg-[#00000090] top-0 right-0 bottom-0 left-0 flex justify-center items-center rounded'>
-              <Spinner size={2} />
+              <Spinner />
             </div>
           )}
         </div>
