@@ -55,48 +55,50 @@ export const Navbar = () => {
                 </a>
               </Link>
             </li>
-            <li className='w-full text-center'>
-              <Link href={'/album/create'}>
-                <a
-                  href='#'
-                  className='block py-2 px-4 w-full hover:text-white rounded lg:bg-transparent  md:p-0 dark:text-gray-400 hover:bg-zinc-900 md:hover:bg-transparent'
-                >
-                  <span className='flex flex-col-reverse justify-center items-center'>
-                    Create
-                    <BiPhotoAlbum size='1.3rem' />
-                  </span>
-                </a>
-              </Link>
-            </li>
             {user ? (
-              <li className='relative w-full text-center'>
-                <button
-                  onClick={handleLogout}
-                  className='md:hidden flex gap-2 items-center justify-center mx-auto w-full'
-                >
-                  <Avatar />
-                  <span>Logout</span>
-                </button>
-
-                <button
-                  onClick={() => setShowLogout(!showLogout)}
-                  className='hidden md:flex gap-2 items-center justify-center mx-auto w-full'
-                >
-                  <Avatar />
-                  <span className='md:hidden'>Logout</span>
-                </button>
-
-                {showLogout && (
-                  <div className='md:absolute top-16 bg-zinc-700 right-4 h-28 w-40 rounded'>
-                    <button
-                      onClick={handleLogout}
-                      className='px-4 py-4 hover:bg-zinc-800 w-full font-semibold rounded'
+              <>
+                <li className='w-full text-center'>
+                  <Link href={'/album/create'}>
+                    <a
+                      href='#'
+                      className='block py-2 px-4 w-full hover:text-white rounded lg:bg-transparent  md:p-0 dark:text-gray-400 hover:bg-zinc-900 md:hover:bg-transparent'
                     >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </li>
+                      <span className='flex flex-col-reverse justify-center items-center'>
+                        Create
+                        <BiPhotoAlbum size='1.3rem' />
+                      </span>
+                    </a>
+                  </Link>
+                </li>
+                <li className='relative w-full text-center'>
+                  <button
+                    onClick={handleLogout}
+                    className='md:hidden flex gap-2 items-center justify-center mx-auto w-full'
+                  >
+                    <Avatar />
+                    <span>Logout</span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowLogout(!showLogout)}
+                    className='hidden md:flex gap-2 items-center justify-center mx-auto w-full'
+                  >
+                    <Avatar />
+                    <span className='md:hidden'>Logout</span>
+                  </button>
+
+                  {showLogout && (
+                    <div className='md:absolute top-16 bg-zinc-700 right-4 h-28 w-40 rounded'>
+                      <button
+                        onClick={handleLogout}
+                        className='px-4 py-4 hover:bg-zinc-800 w-full font-semibold rounded'
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </li>
+              </>
             ) : (
               <li className='relative w-full text-center'>
                 <button
